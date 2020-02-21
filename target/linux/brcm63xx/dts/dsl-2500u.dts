@@ -1,0 +1,45 @@
+/dts-v1/;
+
+/include/ "bcm6332.dtsi"
+
+/ {
+	model = "D-Link DSL-2500U/BRU/C";
+	compatible = "d-link,dsl-2500u", "brcm,bcm6338";
+
+	gpio-leds {
+		compatible = "gpio-leds";
+
+		green_power {
+			label = "96332CG_F4W:green:power";
+			gpios = <&gpio0 0 1>;
+			default-state = "on";
+		};
+
+		green_stop {
+			label = "96332CG_F4W:green:ppp";
+			gpios = <&gpio0 4 1>;
+		};
+	};
+};
+
+&pflash {
+	status = "ok";
+
+	linux,part-probe = "bcm63xxpart";
+
+	cfe@0 {
+		label = "CFE";
+		reg = <0x000000 0x010000>;
+		read-only;
+	};
+
+	linux@10000 {
+		label = "linux";
+		reg = <0x010000 0x1e0000>;
+	};
+
+	nvram@1f0000 {
+		label = "nvram";
+		reg = <0x1f0000 0x010000>;
+	};
+};

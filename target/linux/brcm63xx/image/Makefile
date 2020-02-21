@@ -325,6 +325,8 @@ $(eval $(call ImageDTB,CFEDTB,VR3025u,VR-3025u,vr-3025u,96368M-1541N,6368,--pad 
 $(eval $(call ImageDTB,CFEDTB,VR3025un,VR-3025un,vr-3025un,96368M-1341N,6368,--pad 4))
 # Comtrend WAP-5813n
 $(eval $(call ImageDTB,CFEDTB,WAP5813n,WAP-5813n,wap-5813n,96369R-1231N,6368,--pad 4))
+# D-Link D-Link D-Link DSL-2500U/BRU/C
+$(eval $(call ImageDTB,CFEDTB,DSL2500U,DSL2500U,dsl-2500u,96332CG_F4W,6338))
 # D-Link DSL-2640B, rev B2
 $(eval $(call ImageDTB,CFEDTB,DSL2640B-B2,DSL2640B_B,dsl-2640b-b,D-4P-W,6348))
 # D-Link DSL-2640U, rev C1

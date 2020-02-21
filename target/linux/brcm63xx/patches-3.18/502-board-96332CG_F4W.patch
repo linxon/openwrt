@@ -1,0 +1,163 @@
+diff -ur a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards/board_bcm963xx.c
+--- a/arch/mips/bcm63xx/boards/board_bcm963xx.c	2020-02-21 12:01:22.819509000 +0300
++++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c	2020-02-21 15:37:12.911593862 +0300
+@@ -612,6 +612,120 @@
+  * known 6338 boards
+  */
+ #ifdef CONFIG_BCM63XX_CPU_6338
++static struct board_info __initdata board_96332cg_f4w = {
++	.name                = "96332CG_F4W",
++	.expected_cpu_id        = 0x6338,
++
++	.has_uart0            = 1,
++	.has_enet0            = 1,
++	.enet0 = {
++		.has_phy        = 1,
++		.phy_id            = 0,
++		.force_speed_100    = 1,
++		.force_duplex_full    = 1,
++	},
++
++	.leds = {
++		{
++			.name        = "96332CG_F4W:green:g0",
++			.gpio        = 0,
++			.active_low    = 1,
++		},
++		{
++			.name        = "96332CG_F4W:green:g1",
++			.gpio        = 1,
++			.active_low    = 1,
++		},
++		{
++			.name        = "96332CG_F4W:green:g2",
++			.gpio        = 2,
++			.active_low    = 1,
++		},
++		{
++			.name        = "96332CG_F4W:green:g3",
++			.gpio        = 3,
++			.active_low    = 1,
++		},
++		{
++			.name        = "96332CG_F4W:green:g4",
++			.gpio        = 4,
++			.active_low    = 1,
++		},
++		{
++			.name        = "96332CG_F4W:green:g5",
++			.gpio        = 5,
++			.active_low    = 1,
++		},
++		{
++			.name        = "96332CG_F4W:green:g6",
++			.gpio        = 6,
++			.active_low    = 1,
++		},
++		{
++			.name        = "96332CG_F4W:green:g7",
++			.gpio        = 7,
++			.active_low    = 1,
++		},
++	},
++};
++
++static struct board_info __initdata board_96332cg = {
++	.name                = "96332CG",
++	.expected_cpu_id        = 0x6338,
++
++	.has_uart0            = 1,
++	.has_enet0            = 1,
++	.enet0 = {
++		.has_phy        = 1,
++		.phy_id            = 0,
++		.force_speed_100    = 1,
++		.force_duplex_full    = 1,
++	},
++
++	.leds = {
++		{
++			.name        = "96332CG_F4W:green:g0",
++			.gpio        = 0,
++			.active_low    = 1,
++		},
++		{
++			.name        = "96332CG_F4W:green:g1",
++			.gpio        = 1,
++			.active_low    = 1,
++		},
++		{
++			.name        = "96332CG_F4W:green:g2",
++			.gpio        = 2,
++			.active_low    = 1,
++		},
++		{
++			.name        = "96332CG_F4W:green:g3",
++			.gpio        = 3,
++			.active_low    = 1,
++		},
++		{
++			.name        = "96332CG_F4W:green:g4",
++			.gpio        = 4,
++			.active_low    = 1,
++		},
++		{
++			.name        = "96332CG_F4W:green:g5",
++			.gpio        = 5,
++			.active_low    = 1,
++		},
++		{
++			.name        = "96332CG_F4W:green:g6",
++			.gpio        = 6,
++			.active_low    = 1,
++		},
++		{
++			.name        = "96332CG_F4W:green:g7",
++			.gpio        = 7,
++			.active_low    = 1,
++		},
++	},
++};
++
+ static struct board_info __initdata board_96338gw = {
+ 	.name				= "96338GW",
+ 	.expected_cpu_id		= 0x6338,
+@@ -2317,6 +2431,8 @@
+ 	&board_FAST2704V2,
+ #endif
+ #ifdef CONFIG_BCM63XX_CPU_6338
++	&board_96332cg_f4w,
++	&board_96332cg,
+ 	&board_96338gw,
+ 	&board_96338w,
+ 	&board_96338w2_e7t,
+@@ -2413,6 +2529,7 @@
+ 	{ .compatible = "sagem,f@st2704v2", .data = &board_FAST2704V2, },
+ #endif
+ #ifdef CONFIG_BCM63XX_CPU_6338
++	{ .compatible = "d-link,dsl-2500u", .data = &board_96332cg_f4w, },
+ 	{ .compatible = "brcm,bcm96338gw", .data = &board_96338gw, },
+ 	{ .compatible = "brcm,bcm96338w", .data = &board_96338w, },
+ 	{ .compatible = "dynalink,rta1320", .data = &board_rta1320_16m, },
+diff -ur a/arch/mips/bcm63xx/dev-flash.c b/arch/mips/bcm63xx/dev-flash.c
+--- a/arch/mips/bcm63xx/dev-flash.c	2020-02-21 15:15:08.799246000 +0300
++++ b/arch/mips/bcm63xx/dev-flash.c	2020-02-21 15:31:26.863579021 +0300
+@@ -109,6 +109,8 @@
+ 		else
+ 			return BCM63XX_FLASH_TYPE_NAND;
+ 	case BCM6338_CPU_ID:
++		/* no way to auto detect so assume parallel */
++		return BCM63XX_FLASH_TYPE_SERIAL;
+ 	case BCM6345_CPU_ID:
+ 	case BCM6348_CPU_ID:
+ 		/* no way to auto detect so assume parallel */
+@@ -241,6 +243,9 @@
+ 		if (BCMCPU_IS_6358() || BCMCPU_IS_6368())
+ 			bcm63xx_flash_data.max_transfer_len = SPI_6358_MSG_DATA_SIZE;
+ 
++		if (BCMCPU_IS_6338())
++			bcm63xx_flash_data.max_transfer_len = SPI_6348_MSG_DATA_SIZE - 7;
++
+ 		return spi_register_board_info(bcm63xx_spi_flash_info,
+ 					ARRAY_SIZE(bcm63xx_spi_flash_info));
+ 	case BCM63XX_FLASH_TYPE_NAND:
